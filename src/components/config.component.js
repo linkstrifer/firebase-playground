@@ -36,7 +36,7 @@ export default function Config() {
   }
 
   return (
-    <Container>
+    <Container style={{ margin: "15px 0" }}>
       <Form onSubmit={handleSubmit}>
         <Header as="h2">Config</Header>
         {fields.map(name => (

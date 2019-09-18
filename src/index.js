@@ -11,7 +11,9 @@ function App() {
   return (
     <StoreProvider>
       <Container text>
-        <Header as="h1">Firebase Playground</Header>
+        <Header style={{ margin: "15px 0" }} as="h1">
+          Firebase Playground
+        </Header>
         <Config />
         <Firestore />
       </Container>
