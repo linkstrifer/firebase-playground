@@ -3,7 +3,10 @@ import Firebase from "firebase";
 let firebase = null;
 
 export function initFirebase(config) {
-  firebase = Firebase.initializeApp(config);
+  console.info("initializing firebase app with this configuration");
+  console.table({
+    config
+  });
 
-  console.log(firebase);
+  firebase = Firebase.initializeApp(config, `app-${new Date().getTime()}`);
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Header, Container } from "semantic-ui-react";
 import { Store } from "./storeProvider.component";
 
@@ -14,8 +14,14 @@ const fields = [
 
 export default function Config() {
   const [opened, setOpen] = useState(false);
-  const [state, setState] = useState({});
-  const [, dispatch] = Store();
+  const [globalState, dispatch] = Store();
+  const [state, setState] = useState(null);
+
+  useEffect(() => {
+    if (!state) {
+      setState(globalState.config);
+    }
+  }, [state, globalState.config]);
 
   function handleChange(e, { name, value }) {
     setState({
@@ -46,6 +52,7 @@ export default function Config() {
             label={name}
             name={name}
             onChange={handleChange}
+            value={(state && state[name]) || ""}
           />
         ))}
         <Button type="submit" primary>

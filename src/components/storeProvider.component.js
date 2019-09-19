@@ -3,9 +3,13 @@ import { initFirebase } from "../libs/firebase";
 
 const StateContext = createContext();
 
-const initialState = {
+const Cache = window.localStorage;
+
+const initialState = JSON.parse(Cache.getItem("state")) || {
   config: {}
 };
+
+initFirebase(initialState.config);
 
 function reducer(state, action) {
   switch (action.type) {
@@ -27,9 +31,26 @@ function reducer(state, action) {
   }
 }
 
+function cacheStore(state) {
+  Cache.setItem("state", JSON.stringify(state));
+}
+
+function middlewares(state, action) {
+  console.info("PREV STATE:");
+  console.table(state);
+  const currentState = reducer(state, action);
+
+  cacheStore(currentState);
+
+  console.info("NEXT STATE:");
+  console.table(currentState);
+
+  return currentState;
+}
+
 export default function StoreProvider({ children }) {
   return (
-    <StateContext.Provider value={useReducer(reducer, initialState)}>
+    <StateContext.Provider value={useReducer(middlewares, initialState)}>
       {children}
     </StateContext.Provider>
   );
