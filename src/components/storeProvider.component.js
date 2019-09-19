@@ -1,25 +1,35 @@
-import React, { createContext, useReducer, useContext } from "react";
-import { initFirebase } from "../libs/firebase";
+import React, { createContext, useReducer, useContext } from 'react';
+import { initFirebase } from '../libs/firebase';
 
 const StateContext = createContext();
 
 const Cache = window.localStorage;
 
-const initialState = JSON.parse(Cache.getItem("state")) || {
-  config: {}
+const initialState = JSON.parse(Cache.getItem('state')) || {
+  config: {
+    apiKey: '',
+    authDomain: '',
+    databaseURL: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: '',
+  },
 };
+
+console.info('INITIAL STATE:', initialState);
 
 initFirebase(initialState.config);
 
 function reducer(state, action) {
   switch (action.type) {
-    case "CONFIG_UPDATE": {
+    case 'CONFIG_UPDATE': {
       const newState = {
         ...state,
         config: {
           ...state.config,
-          ...action.config
-        }
+          ...action.config,
+        },
       };
 
       initFirebase(state.config);
@@ -32,17 +42,17 @@ function reducer(state, action) {
 }
 
 function cacheStore(state) {
-  Cache.setItem("state", JSON.stringify(state));
+  Cache.setItem('state', JSON.stringify(state));
 }
 
 function middlewares(state, action) {
-  console.info("PREV STATE:");
+  console.info('PREV STATE:');
   console.table(state);
   const currentState = reducer(state, action);
 
   cacheStore(currentState);
 
-  console.info("NEXT STATE:");
+  console.info('NEXT STATE:');
   console.table(currentState);
 
   return currentState;
